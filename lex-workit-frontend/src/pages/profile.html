@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sena App - Profile Page" />
+  <title>Sena App - Profile</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="assets/favicon.ico" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+  <main>
+    <h2>Profile</h2>
+    <p><strong>Username:</strong></p>
+    <p><strong>Email:</strong></p>
+    <p><strong>Bio:</strong></p>
+    <button disabled>Logout</button>
+
+    <section>
+      <h3>Pick Exercises for Your Schedule</h3>
+      <div class="workout-grid" id="exercise-list">
+        <div class="workout-card">
+          <h4>Burpees</h4>
+          <p>Quick, intense full-body movement to boost heart rate and burn calories.</p>
+          <p><strong>Duration:</strong> 30sec</p>
+          <p><strong>Times:</strong> 3 rounds</p>
+          <a href="https://health.clevelandclinic.org/how-to-do-burpee" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+        <div class="workout-card">
+          <h4>Mountain Climbers</h4>
+          <p>Cardio-intensive core and leg movement to improve agility and endurance.</p>
+          <p><strong>Duration:</strong> 30sec</p>
+          <p><strong>Times:</strong> 3 rounds</p>
+          <a href="https://www.hingehealth.com/resources/articles/mountain-climbers/" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+        <div class="workout-card">
+          <h4>Jump Squats</h4>
+          <p>Plyometric lower-body exercise to build explosive power.</p>
+          <p><strong>Duration:</strong> 30sec</p>
+          <p><strong>Times:</strong> 3 rounds</p>
+          <a href="https://www.webmd.com/fitness-exercise/how-to-do-jump-squats" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+        <div class="workout-card">
+          <h4>Push-Ups</h4>
+          <p>Upper-body strength exercise targeting chest, triceps, and shoulders.</p>
+          <p><strong>Duration:</strong> 30sec</p>
+          <p><strong>Times:</strong> 3 rounds</p>
+          <a href="https://www.adidas.com/us/blog/830788-10-pushup-workouts-for-total-body-strength" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+        <div class="workout-card">
+          <h4>Dumbbell Incline Press</h4>
+          <p>This exercise focuses on the upper chest and shoulders. Lying on an inclined bench, you press dumbbells upward, helping to develop strength in the chest, triceps, and shoulders while minimizing shoulder strain compared to a flat bench press.</p>
+          <p><strong>Reps:</strong> 12</p>
+          <p><strong>Times:</strong> 3 sets</p>
+          <a href="https://www.youtube.com/watch?v=kxowbMbeobA&list=PLX764SrJPniTxbfpqJav1qlR3_GEk4udC&index=15" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+        <div class="workout-card">
+          <h4>Bodyweight Dip</h4>
+          <p>This bodyweight exercise targets the chest, triceps, and shoulders. By lowering and raising your body using parallel bars, you engage multiple upper body muscles.</p>
+          <p><strong>Reps:</strong> 12</p>
+          <p><strong>Times:</strong> 3 sets</p>
+          <a href="https://www.youtube.com/watch?v=TrJVszDm7ik" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+        <div class="workout-card">
+          <h4>Cable Tricep Pushdown</h4>
+          <p>This movement isolates the triceps by using a cable machine. Standing upright, you grip a bar or rope attachment and push it downward, extending your arms and contracting your triceps. It's effective for targeting the triceps and improving arm definition.</p>
+          <p><strong>Reps:</strong> 12</p>
+          <p><strong>Times:</strong> 3 sets</p>
+          <a href="https://www.youtube.com/watch?v=-zLyUAo1gMw" target="_blank">Watch Video</a>
+          <button type="button" class="add-btn">Add to Schedule</button>
+        </div>
+      </div>
+      <h3>Your Schedule</h3>
+      <ul id="schedule-list">
+        <!-- Selected exercises will appear here -->
+      </ul>
+      <button id="save-schedule">Save Schedule</button>
+      <div id="schedule-message" class="error"></div>
+    </section>
+    <script src="js/profile.js"></script>
+  </main>
+</body>
+</html> 
