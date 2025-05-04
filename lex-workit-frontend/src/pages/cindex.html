@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #workouts { margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Workout Tracker</h1>
+
+    <form id="workoutForm">
+        <input type="text" id="name" placeholder="Workout Name" required />
+        <input type="text" id="description" placeholder="Description" required />
+    
+        <input type="text" id="images" placeholder="Image URLs (comma-separated)" />
+        <input type="text" id="youtubeLinks" placeholder="YouTube Links (comma-separated)" />
+    
+        <button type="submit">Add Workout</button>
+    </form>
+
+    <h2>Saved Workouts</h2>
+    <div id="workouts"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
