@@ -14,7 +14,7 @@
     <a href="login.html">Login</a>
     <a href="register.html">Register</a>
     <a href="profile.html">Profile</a>
-    <a href="sena-form.html"></a>
+    <a href="sena-form.html">Form</a>
   </nav>
   <main>
     <h1>Transform Your Fitness Journey Today</h1>
@@ -23,7 +23,7 @@
 
     
     
-    <!-- Protected content (only shown if JWT exists) -->
+   
     <div id="protectedContent" style="display: none;">
         <section class="workout-grid">
             <div class="workout-card">
@@ -33,14 +33,14 @@
                 <p><strong>Times:</strong> 3 rounds</p>
                 <a href="https://health.clevelandclinic.org/how-to-do-burpee" target="_blank">Watch Video</a>
             </div>
-            <!-- Add other workout cards here -->
+        
         </section>
         <button id="logoutBtn">Logout</button>
     </div>
     <p id="unauthorizedMessage" style="display: none;">You are not authorized to view this page. Please log in.</p>
   </main>
 
-  <script src="js/home.js"></script> <!-- This will check for the JWT -->
-  <script src="js/logout.js"></script> <!-- This will handle logout -->
+  <script src="js/home.js"></script> 
+  <script src="js/logout.js"></script> 
 </body>
 </html>

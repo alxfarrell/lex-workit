@@ -1,10 +1,9 @@
-// login.js
 
-// LOGIN FORM HANDLING
+
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
   loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); 
 
     const username = event.target.username.value;
     const password = event.target.password.value;
@@ -20,12 +19,10 @@ if (loginForm) {
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token; // Assuming the token is in data.token
+        const token = data.token; token
 
-        // Store token in localStorage
         localStorage.setItem('authToken', token);
 
-        // Redirect to the home or protected page
         window.location.href = 'index.html';
       } else {
         alert('Login failed. Please check your credentials.');
@@ -37,18 +34,15 @@ if (loginForm) {
   });
 }
 
-// LOGOUT BUTTON HANDLING
 const logoutButton = document.getElementById('logoutBtn');
 if (logoutButton) {
   logoutButton.addEventListener('click', () => {
-    // Remove token
+\
     localStorage.removeItem('authToken');
-    sessionStorage.clear(); // Optional: clear temporary session data
+    sessionStorage.clear(); 
 
-    // Optionally clear cookies (example: sessionToken)
     document.cookie = 'sessionToken=; Max-Age=0; path=/;';
 
-    // Redirect to login page
     window.location.href = 'login.html';
 
     alert('You have been logged out.');

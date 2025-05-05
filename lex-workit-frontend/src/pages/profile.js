@@ -1,9 +1,8 @@
-// Redirect users to login if no session token is found
+
 if (!document.cookie.includes("sessionToken")) {
-    window.location.href = "login.html"; // Redirect to login page
+    window.location.href = "login.html"; 
 }
 
-// Fetch and populate user profile details
 fetch("http://localhost:5000/api/profile", {
     method: "GET",
     headers: { "Authorization": `Bearer ${document.cookie.split("=")[1]}` }
@@ -18,7 +17,7 @@ fetch("http://localhost:5000/api/profile", {
     console.error("Failed to load profile data");
 });
 
-// Allow users to add workouts to schedule
+
 document.querySelectorAll(".add-btn").forEach(button => {
     button.addEventListener("click", (e) => {
         const workout = e.target.parentElement.querySelector("h4").innerText;
@@ -30,7 +29,7 @@ document.querySelectorAll(".add-btn").forEach(button => {
     });
 });
 
-// Save schedule to database
+
 document.getElementById("save-schedule").addEventListener("click", () => {
     const scheduleItems = Array.from(document.querySelectorAll("#schedule-list li"))
         .map(item => item.innerText);
@@ -48,7 +47,7 @@ document.getElementById("save-schedule").addEventListener("click", () => {
     });
 });
 
-// Logout functionality
+
 document.getElementById("logoutButton").addEventListener("click", () => {
     document.cookie = "sessionToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.href = "login.html"; // Redirect to login after logout
