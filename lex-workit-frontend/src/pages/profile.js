@@ -1,54 +1,93 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-if (!document.cookie.includes("sessionToken")) {
-    window.location.href = "login.html"; 
-}
+const Profile = () => {
+  const [userData, setUserData] = useState(null);
+  const [schedule, setSchedule] = useState([]);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-fetch("http://localhost:5000/api/profile", {
-    method: "GET",
-    headers: { "Authorization": `Bearer ${document.cookie.split("=")[1]}` }
-})
-.then(response => response.json())
-.then(data => {
-    document.querySelector("p:nth-child(2)").innerText = `Username: ${data.username}`;
-    document.querySelector("p:nth-child(3)").innerText = `Email: ${data.email}`;
-    document.querySelector("p:nth-child(4)").innerText = `Bio: ${data.bio}`;
-})
-.catch(() => {
-    console.error("Failed to load profile data");
-});
+  useEffect(() => {
+    const token = localStorage.getItem("sessionToken");
+    if (!token) {
+      navigate("/login"); // Redirect if no token
+      return;
+    }
 
+    fetch("http://localhost:5000/api/profile", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(response => response.json())
+      .then(data => setUserData(data))
+      .catch(() => console.error("Failed to load profile data"));
+  }, []);
 
-document.querySelectorAll(".add-btn").forEach(button => {
-    button.addEventListener("click", (e) => {
-        const workout = e.target.parentElement.querySelector("h4").innerText;
-        const scheduleList = document.getElementById("schedule-list");
+  const addWorkoutToSchedule = (workout) => {
+    setSchedule([...schedule, workout]);
+  };
 
-        const listItem = document.createElement("li");
-        listItem.innerText = workout;
-        scheduleList.appendChild(listItem);
-    });
-});
-
-
-document.getElementById("save-schedule").addEventListener("click", () => {
-    const scheduleItems = Array.from(document.querySelectorAll("#schedule-list li"))
-        .map(item => item.innerText);
-
+  const saveSchedule = () => {
     fetch("http://localhost:5000/api/schedule", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ schedule: scheduleItems })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ schedule }),
     })
-    .then(() => {
-        document.getElementById("schedule-message").innerText = "Schedule saved!";
-    })
-    .catch(() => {
-        document.getElementById("schedule-message").innerText = "Failed to save!";
-    });
-});
+      .then(() => setMessage("Schedule saved!"))
+      .catch(() => setMessage("Failed to save!"));
+  };
 
+  const handleLogout = () => {
+    localStorage.removeItem("sessionToken");
+    navigate("/login");
+    alert("You have been logged out.");
+  };
 
-document.getElementById("logoutButton").addEventListener("click", () => {
-    document.cookie = "sessionToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = "login.html"; // Redirect to login after logout
-});
+  return (
+    <div>
+      <nav className="navbar">
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        <a href="/profile">Profile</a>
+        <a href="/sena-form">Form</a>
+      </nav>
+
+      <main>
+        {userData ? (
+          <>
+            <h2>Welcome to Your Profile!</h2>
+            <p>Username: {userData.username}</p>
+            <p>Email: {userData.email}</p>
+            <p>Bio: {userData.bio}</p>
+
+            <section className="workout-list">
+              <h3>Pick a Workout</h3>
+              <button className="add-btn" onClick={() => addWorkoutToSchedule("Burpees")}>Burpees</button>
+              <button className="add-btn" onClick={() => addWorkoutToSchedule("Push-ups")}>Push-ups</button>
+            </section>
+
+            <section>
+              <h3>Workout Schedule</h3>
+              <ul>
+                {schedule.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+              <button onClick={saveSchedule}>Save Schedule</button>
+              <p>{message}</p>
+            </section>
+
+            <button onClick={handleLogout} style={{ backgroundColor: "red", color: "white", padding: "10px" }}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <p>Loading profile...</p>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default Profile;
