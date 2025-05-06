@@ -9,12 +9,10 @@ function Cindex() {
         youtubeLinks: ""
     });
 
-    // Handle form input changes
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -34,13 +32,13 @@ function Cindex() {
 
         if (response.ok) {
             alert("Workout saved!");
-            fetchWorkouts(); // Reload workouts
+            fetchWorkouts(); 
         } else {
             alert("Error saving workout.");
         }
     };
 
-    // Load workouts when the page first loads
+
     const fetchWorkouts = async () => {
         const response = await fetch("http://localhost:5001/api/workout");
         const data = await response.json();

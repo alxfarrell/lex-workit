@@ -16,13 +16,15 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
-      if (data.token) {
-        // Store JWT in localStorage instead of cookies
-        localStorage.setItem("sessionToken", data.token);
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.token; // Assuming the token is in data.token
 
-        // Redirect to profile page
-        navigate("/profile");
+        // Store token in localStorage
+        localStorage.setItem('authToken', token);
+
+        // Redirect to the home or protected page
+        window.location.href = 'index.html';
       } else {
         alert("Invalid credentials");
       }
@@ -43,56 +45,26 @@ const Login = () => {
 
       alert("You have been logged out.");
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error('Login error:', error);
+      alert('Something went wrong. Please try again.');
     }
-  };
+  });
+}
 
-  return (
-    <div>
-      <nav className="navbar">
-        <a href="/">Home</a>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        <a href="/profile">Profile</a>
-        <a href="/sena-form">Form</a>
-      </nav>
+// LOGOUT BUTTON HANDLING
+const logoutButton = document.getElementById('logoutBtn');
+if (logoutButton) {
+  logoutButton.addEventListener('click', () => {
+    // Remove token
+    localStorage.removeItem('authToken');
+    sessionStorage.clear(); // Optional: clear temporary session data
 
-      <main>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <label>
-            Username or Email
-            <br />
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-          </label>
-          <br />
-          <label>
-            Password
-            <br />
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </label>
-          <br />
-          <button type="submit">Login</button>
-        </form>
+    // Optionally clear cookies (example: sessionToken)
+    document.cookie = 'sessionToken=; Max-Age=0; path=/;';
 
-        <button
-          onClick={handleLogout}
-          style={{
-            marginTop: "1rem",
-            backgroundColor: "#d32f2f",
-            color: "white",
-            padding: "0.6rem 1.2rem",
-            border: "none",
-            borderRadius: "5px",
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}
-        >
-          Logout
-        </button>
-      </main>
-    </div>
-  );
-};
+    // Redirect to login page
+    window.location.href = 'login.html';
 
-export default Login;
+    alert('You have been logged out.');
+  });
+}
