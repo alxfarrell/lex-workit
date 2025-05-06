@@ -36,7 +36,9 @@ db.connect(err => {
 
 // Route to handle contact form submissions
 app.post('/api/contacts', (req, res) => {
+  console.log("input", req.body)
   const { name, email, message } = req.body;
+
   const sql = 'INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)';
 
   db.query(sql, [name, email, message], (err, result) => {

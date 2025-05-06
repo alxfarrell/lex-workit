@@ -1,56 +1,98 @@
-// login.js
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// LOGIN FORM HANDLING
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-  loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission
+const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const username = event.target.username.value;
-    const password = event.target.password.value;
+  const handleLogin = async (event) => {
+    event.preventDefault();
 
     try {
-      const response = await fetch('https://your-api.com/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.token; // Assuming the token is in data.token
+      const data = await response.json();
+      if (data.token) {
+        // Store JWT in localStorage instead of cookies
+        localStorage.setItem("sessionToken", data.token);
 
-        // Store token in localStorage
-        localStorage.setItem('authToken', token);
-
-        // Redirect to the home or protected page
-        window.location.href = 'index.html';
+        // Redirect to profile page
+        navigate("/profile");
       } else {
-        alert('Login failed. Please check your credentials.');
+        alert("Invalid credentials");
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Something went wrong. Please try again.');
+    } catch (err) {
+      console.error("Login error:", err);
     }
-  });
-}
+  };
 
-// LOGOUT BUTTON HANDLING
-const logoutButton = document.getElementById('logoutBtn');
-if (logoutButton) {
-  logoutButton.addEventListener('click', () => {
-    // Remove token
-    localStorage.removeItem('authToken');
-    sessionStorage.clear(); // Optional: clear temporary session data
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5000/api/logout", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${localStorage.getItem("sessionToken")}` },
+      });
 
-    // Optionally clear cookies (example: sessionToken)
-    document.cookie = 'sessionToken=; Max-Age=0; path=/;';
+      localStorage.removeItem("sessionToken");
+      navigate("/login");
 
-    // Redirect to login page
-    window.location.href = 'login.html';
+      alert("You have been logged out.");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
-    alert('You have been logged out.');
-  });
-}
+  return (
+    <div>
+      <nav className="navbar">
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        <a href="/profile">Profile</a>
+        <a href="/sena-form">Form</a>
+      </nav>
+
+      <main>
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <label>
+            Username or Email
+            <br />
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          </label>
+          <br />
+          <label>
+            Password
+            <br />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </label>
+          <br />
+          <button type="submit">Login</button>
+        </form>
+
+        <button
+          onClick={handleLogout}
+          style={{
+            marginTop: "1rem",
+            backgroundColor: "#d32f2f",
+            color: "white",
+            padding: "0.6rem 1.2rem",
+            border: "none",
+            borderRadius: "5px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
+      </main>
+    </div>
+  );
+};
+
+export default Login;
