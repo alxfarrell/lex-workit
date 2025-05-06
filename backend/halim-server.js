@@ -5,58 +5,49 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 
-const workoutRoutes = require("./routes/workoutRoutes"); // Modular routes
-const authRoutes = require("./routes/authRoutes"); // Auth routes
+const workoutRoutes = require("./routes/workoutRoutes");
+const authRoutes = require("./routes/authRoutes");
+const { verifyToken } = require("./middleware/auth");
+
 const app = express();
 
+// Middleware
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(cookieParser()); // Enable cookie parsing
+app.use(cookieParser());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.error("MongoDB connection error:", err));
+// CORS configuration
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-// JWT Middleware for Secure Routes
-const verifyToken = (req, res, next) => {
-    const token = req.cookies.sessionToken || req.headers.authorization?.split(" ")[1];
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connected to MongoDB:", process.env.MONGO_DB_NAME))
+.catch(err => console.error("MongoDB connection error:", err));
 
-    if (!token) {
-        return res.status(401).json({ error: "Unauthorized access" });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({ error: "Invalid token" });
-        }
-        req.user = decoded; // Attach user data to request
-        next();
-    });
-};
-
-// Authentication Route (Login)
-app.post("/api/auth/login", async (req, res) => {
-    const { username, password } = req.body;
-
-    // Mock user validation (Replace with database lookup)
-    if (username === "testuser" && password === "password123") {
-        const token = jwt.sign({ username, role: "user" }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        res.cookie("sessionToken", token, { httpOnly: true, secure: false, maxAge: 3600000 });
-        return res.json({ success: true, token });
-    } else {
-        return res.status(400).json({ error: "Invalid credentials" });
-    }
-});
-
-// Protected Profile Route (Only accessible with JWT)
-app.get("/api/profile", verifyToken, (req, res) => {
-    res.json({ username: req.user.username, role: req.user.role });
-});
-
-// Use modular routes
-app.use("/api/workouts", workoutRoutes);
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/workouts", workoutRoutes);
+
+// Protected route example
+app.get("/api/profile", verifyToken, (req, res) => {
+    res.json({ 
+        username: req.user.username,
+        message: "This is a protected route"
+    });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: "Something broke!" });
+});
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Workout server running on port ${PORT}`));
