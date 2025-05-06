@@ -25,7 +25,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'de!ta52C0y0te',
+  password: 'mysqltool',
   database: 'contactDB',
 });
 
