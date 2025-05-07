@@ -1,76 +1,125 @@
 import { useState, useEffect } from "react";
+import '../style.css';
 
 function Cindex() {
     const [workouts, setWorkouts] = useState([]);
-    const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        images: "",
-        youtubeLinks: ""
-    });
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const imagesArray = formData.images.split(",").map(url => url.trim());
-        const youtubeLinksArray = formData.youtubeLinks.split(",").map(url => url.trim());
-
-        const response = await fetch("http://localhost:5001/api/workout", { // Ensure backend API is correct
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name: formData.name,
-                description: formData.description,
-                images: imagesArray,
-                youtubeLinks: youtubeLinksArray
-            })
-        });
-
-        if (response.ok) {
-            alert("Workout saved!");
-            fetchWorkouts(); 
-        } else {
-            alert("Error saving workout.");
-        }
-    };
-
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortBy, setSortBy] = useState("name");
 
     const fetchWorkouts = async () => {
-        const response = await fetch("http://localhost:5001/api/workout");
-        const data = await response.json();
-        setWorkouts(data);
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch("http://localhost:4004/api/workouts", {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setWorkouts(data);
+        } catch (err) {
+            console.error('Error fetching workouts:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         fetchWorkouts();
     }, []);
 
+    // Filter and sort workouts
+    const filteredAndSortedWorkouts = workouts
+        .filter(workout => 
+            workout.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            workout.description.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .sort((a, b) => {
+            if (sortBy === "name") {
+                return a.name.localeCompare(b.name);
+            }
+            return 0;
+        });
+
     return (
-        <div>
-            <h1>Workout Tracker</h1>
+        <div className="container">
+            <h1>Workout Library</h1>
 
-            <form onSubmit={handleSubmit}>
-                <input type="text" id="name" placeholder="Workout Name" required onChange={handleChange} />
-                <input type="text" id="description" placeholder="Description" required onChange={handleChange} />
-                <input type="text" id="images" placeholder="Image URLs (comma-separated)" onChange={handleChange} />
-                <input type="text" id="youtubeLinks" placeholder="YouTube Links (comma-separated)" onChange={handleChange} />
-                <button type="submit">Add Workout</button>
-            </form>
+            {/* Search and Filter Section */}
+            <div className="search-filter-section">
+                <input
+                    type="text"
+                    placeholder="Search workouts..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                />
+                <select 
+                    value={sortBy} 
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="sort-select"
+                >
+                    <option value="name">Sort by Name</option>
+                </select>
+            </div>
 
-            <h2>Saved Workouts</h2>
-            <div>
-                {workouts.map(workout => (
-                    <div key={workout._id}>
-                        <h3>{workout.name}</h3>
-                        <p>{workout.description}</p>
-                        {workout.images.map(img => <img key={img} src={img} alt="Workout" width="100" />)}
-                        {workout.youtubeLinks.map(link => <a key={link} href={link} target="_blank" rel="noopener noreferrer">YouTube</a>)}
+            {error && (
+                <div className="error-message">
+                    <p>Error: {error}</p>
+                    <button onClick={fetchWorkouts} className="retry-button">
+                        Retry
+                    </button>
+                </div>
+            )}
+
+            {loading && (
+                <div className="loading-message">
+                    <p>Loading workouts...</p>
+                </div>
+            )}
+
+            {/* Workouts Grid */}
+            <div className="workouts-grid">
+                {!loading && !error && filteredAndSortedWorkouts.length === 0 ? (
+                    <div className="no-workouts">
+                        {searchTerm ? "No workouts match your search" : "No workouts available"}
                     </div>
-                ))}
+                ) : (
+                    filteredAndSortedWorkouts.map(workout => (
+                        <div key={workout._id} className="workout-card">
+                            <div className="workout-header">
+                                <h3>{workout.name}</h3>
+                            </div>
+                            <div className="workout-content">
+                                <p className="workout-description">{workout.description}</p>
+                                {workout.youtubeLinks && workout.youtubeLinks.length > 0 && (
+                                    <div className="workout-links">
+                                        <a 
+                                            href={workout.youtubeLinks[0]} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="youtube-link"
+                                        >
+                                            Watch Tutorial
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
