@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const workout = require('../models/workoutSchema');  // Import the Workout model
 
-// [PERSON 2 SPEAKING POINTS]
 // CRUD Operations Implementation:
 // 1. CREATE (POST /)
 //    - Creates new workout with name, description, images, and youtubeLinks

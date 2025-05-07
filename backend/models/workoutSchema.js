@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// [PERSON 2 SPEAKING POINTS]
 // 1. MongoDB Collection Structure:
 //    - Using Mongoose Schema for structured data
 //    - Collection name explicitly set to "newUserWorkouts"

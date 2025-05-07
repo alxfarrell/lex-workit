@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user"); // Import the User model
 const router = express.Router();
 
-// [PERSON 2 SPEAKING POINTS]
 // Authentication System Implementation:
 // 1. JWT Token Configuration
 //    - Using environment variables for secrets
