@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const workout = require('../models/workoutSchema');  // Import the Workout model
 
-// CREATE a workout
+// [PERSON 2 SPEAKING POINTS]
+// CRUD Operations Implementation:
+// 1. CREATE (POST /)
+//    - Creates new workout with name, description, images, and youtubeLinks
+//    - Returns 201 status on success
 router.post("/", async (req, res) => {
   console.log("Received workout data:", req.body); // Debugging step
 
@@ -19,7 +23,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-// READ all workouts
+// 2. READ (GET /)
+//    - Retrieves all workouts
+//    - Returns array of workout objects
 router.get('/', async (req, res) => {
   try {
     const workouts = await workout.find();  // Fetch all workouts from the database
@@ -29,7 +35,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// READ a single workout by ID
+// 3. READ ONE (GET /:id)
+//    - Retrieves single workout by ID
+//    - Returns 404 if not found
 router.get('/:id', async (req, res) => {
   try {
     const workout = await workout.findById(req.params.id);  // Fetch a workout by ID
@@ -42,7 +50,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// UPDATE a workout by ID
+// 4. UPDATE (PUT /:id)
+//    - Updates workout by ID
+//    - Returns updated workout object
 router.put('/:id', async (req, res) => {
   try {
     const updatedWorkout = await workout.findByIdAndUpdate(
@@ -56,7 +66,9 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE a workout by ID
+// 5. DELETE (DELETE /:id)
+//    - Deletes workout by ID
+//    - Returns success message
 router.delete('/:id', async (req, res) => {
   try {
     await workout.findByIdAndDelete(req.params.id);  // Delete the workout by ID

@@ -4,10 +4,18 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user"); // Import the User model
 const router = express.Router();
 
+// [PERSON 2 SPEAKING POINTS]
+// Authentication System Implementation:
+// 1. JWT Token Configuration
+//    - Using environment variables for secrets
+//    - Token verification middleware
 const JWT_SECRET = process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 
-// Middleware to verify JWT token
+// 2. Token Verification Middleware
+//    - Checks for token in cookies
+//    - Verifies token validity
+//    - Attaches user data to request
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
 
@@ -24,7 +32,10 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-// 🔹 SIGNUP ROUTE (Create User)
+// 3. User Registration
+//    - Password hashing with bcrypt
+//    - Email uniqueness check
+//    - User creation in database
 router.post("/signup", async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -41,7 +52,10 @@ router.post("/signup", async (req, res) => {
     }
 });
 
-// 🔹 LOGIN ROUTE (Authenticate User)
+// 4. Login System
+//    - Password comparison
+//    - JWT token generation
+//    - Secure cookie setting
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
@@ -63,7 +77,10 @@ router.post("/login", async (req, res) => {
                 { expiresIn: "1h" }
             );
 
-            // Set token in HTTP-only cookie
+            // 5. Cookie Management
+            //    - HTTP-only cookies
+            //    - Secure in production
+            //    - Strict same-site policy
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // Use secure in production
@@ -101,7 +118,10 @@ router.get("/verify", verifyToken, (req, res) => {
     });
 });
 
-// 🔹 PROTECTED ROUTE (Check Authentication)
+// 6. Protected Routes
+//    - Token verification
+//    - User data access
+//    - Secure endpoints
 router.get("/profile", verifyToken, (req, res) => {
     res.json({ 
         username: req.user.username,

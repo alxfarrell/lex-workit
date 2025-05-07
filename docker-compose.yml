@@ -1,3 +1,9 @@
+# [PERSON 2 SPEAKING POINTS]
+# Database Configuration and Setup:
+# 1. Backend Service
+#    - Connects to both MongoDB and MySQL
+#    - Environment variables for database connections
+#    - Port mapping for API access
 services:
   backend:
     build: ./backend
@@ -15,6 +21,10 @@ services:
     networks:
       - app-network
 
+  # 2. MongoDB Configuration
+  #    - Latest MongoDB image
+  #    - Persistent volume for data
+  #    - Network configuration
   mongo-db:
     image: mongo:latest
     container_name: mongo-db
@@ -25,6 +35,10 @@ services:
     networks:
       - app-network
 
+  # 3. MySQL Configuration
+  #    - Latest MySQL image
+  #    - Root password and database setup
+  #    - Persistent volume for data
   mysql-db:
     image: mysql:latest
     container_name: mysql-db
@@ -38,10 +52,14 @@ services:
     networks:
       - app-network
 
+# 4. Network Configuration
+#    - Bridge network for service communication
 networks:
   app-network:
     driver: bridge
 
+# 5. Volume Configuration
+#    - Persistent storage for both databases
 volumes:
   mongo-data:
   mysql-data:
