@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import "./styles.css";
+import "../styles.css";
 
 const ProfileView = () => {
   return (
@@ -40,4 +40,4 @@ const ProfileView = () => {
   );
 };
 
-export default ProfileView;
+export default ProfileView; 
