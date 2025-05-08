@@ -1,5 +1,5 @@
 # lex-workit
-Workout app that allows users to view workouts, create an account to add personalized workouts, and share workouts via email.
+Workout app that allows users to view workouts, create an account to add personalized workouts, and share workouts via email. To start, download & extract the project folder, cd into it, run npm install for any dependecies and then cd into the lex-workit-frontend folder, run npm start and enjoy!
 
 ## AI Assistance and References
 ----------------------------
